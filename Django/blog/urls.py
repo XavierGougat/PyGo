@@ -3,6 +3,5 @@ from django.urls import path, include
 from blog import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('blog/', include('blog.urls')),
+    path('article/<int:id_article>', views.view_article),
 ]

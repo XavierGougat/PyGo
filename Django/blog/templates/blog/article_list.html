@@ -1,21 +1,26 @@
 <h1>Bienvenue sur le blog des crêpes bretonnes !</h1>
-
+<h3>Catégories disponibles</h3>
+<ul>
+{% for categorie in categories %}
+    <li><a href="{% url "blog_categorie" categorie.id %}">{{ categorie.nom }}</a></li>
+{% endfor %}
+</ul>
 {% for article in les_articles %}
     <div class="article">
-       <h3>{{ article.titre }}</h3>
-       <p>{{ article.contenu|truncatewords_html:80 }}</p>
+        <h3>{{ article.titre }}</h3>
+        <p>{{ article.contenu|truncatewords_html:80 }}</p>
+        <p><a href="{% url "blog_lire" article.id %}">Lire la suite</a>
     </div>
 {% endfor %}
-
 {# Mise en forme de la pagination ici #}
 {% if is_paginated %}
     <div class="pagination">
-           {% if page_obj.has_previous %}
-               <a href="?page={{ page_obj.previous_page_number }}">Précédente</a> —
-           {% endif %}
-           Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }} 
-           {% if page_obj.has_next %}
-              — <a href="?page={{ page_obj.next_page_number }}">Suivante</a>
-           {% endif %}
+    {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}">Précédente</a> —
+    {% endif %}
+    Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }} 
+    {% if page_obj.has_next %}
+        — <a href="?page={{ page_obj.next_page_number }}">Suivante</a>
+    {% endif %}
     </div>
 {% endif %}

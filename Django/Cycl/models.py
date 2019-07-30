@@ -54,8 +54,8 @@ class Parcours(models.Model):
 
 class Team(models.Model):
     name = models.CharField(max_length=100)
-    abreviation = models.CharField(max_length=3)
-    bike = models.CharField(max_length=30)
+    abreviation = models.CharField(max_length=3, null=True)
+    bike = models.CharField(max_length=30, null=True)
 
     def __str__(self):
         return self.name
@@ -159,7 +159,7 @@ class Player(models.Model):
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=50)
     isPremium = models.BooleanField(default=False)
-    lastLogin = models.DateTimeField(default=timezone.now())
+    lastLogin = models.DateTimeField(default=timezone.now)
 
     class Meta:
         ordering = ['lastName', 'firstName']

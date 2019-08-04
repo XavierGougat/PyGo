@@ -1,12 +1,44 @@
 import csv
+import datetime
+from django.shortcuts import get_object_or_404
 from Cycl import models
 
-f = open('lequipe_etape.csv', 'r')
+f = open('Cycl/scrap/csv/riders_WTT.csv', 'r')
 
 for line in f:
     line = line.split(';')
-    team = models.Team()
-    team.name = line[0]
-    team.save()
+
+    if line[0] == "Rider":
+        rider = models.Rider()
+        rider.lastName = line[1]
+        rider.firstName = line[2]
+        rider.birthDate = datetime.datetime.strptime(line[3], "%d/%m/%Y").date()
+        nation = models.Country()
+        nation = get_object_or_404(models.Country, alpha3Code=line[6])
+        rider.save()
+        rider.nation = nation
+        rider.continent = line[7]
+        team = models.Team()
+        team = get_object_or_404(models.Team, abreviation=line[8])
+        rider.save()
+        rider.team.add(team)
+        rider.uciid = line[10]
+        rider.save()
+    else:
+        staff = models.Staff()
+        staff.function = line[0]
+        staff.lastName = line[1]
+        staff.firstName = line[2]
+        nation = models.Country()
+        nation = get_object_or_404(models.Country, alpha3Code=line[6])
+        staff.save()
+        staff.nation = nation
+        staff.continent = line[7]
+        team = models.Team()
+        team = get_object_or_404(models.Team, abreviation=line[8])
+        staff.save()
+        staff.team.add(team)
+        staff.uciid = line[10]
+        staff.save()
 
 f.close()

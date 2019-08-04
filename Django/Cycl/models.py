@@ -53,22 +53,61 @@ class Parcours(models.Model):
 
 
 class Team(models.Model):
-    name = models.CharField(max_length=100)
-    abreviation = models.CharField(max_length=3, null=True)
+    name = models.CharField(max_length=100, null=False)
+    abreviation = models.CharField(max_length=3, null=False, default="ABC")
     bike = models.CharField(max_length=30, null=True)
+    nation = models.CharField(max_length=50, null=True)
+    continent = models.CharField(max_length=50, null=True)
+    category = models.ForeignKey("Teamcategory",
+                                 default=1,
+                                 on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ['name', ]
 
     def __str__(self):
         return self.name
 
 
+class Teamcategory(models.Model):
+    name = models.CharField(max_length=50, null=False)
+    label = models.CharField(max_length=150, null=True)
+
+    class Meta:
+        verbose_name_plural = "Teamcategories"
+
+    def __str__(self):
+        return self.name + ' : ' + self.label
+
+
+class Staff(models.Model):
+    firstName = models.CharField(max_length=100, null=True)
+    lastName = models.CharField(max_length=100, null=True)
+    birthDate = models.DateTimeField(null=True)
+    nation = models.ForeignKey("Country", on_delete=models.CASCADE, default=1)
+    continent = models.CharField(max_length=50, null=True)
+    uciid = models.CharField(max_length=11, null=True)
+    function = models.CharField(max_length=50)
+    team = models.ManyToManyField(Team, related_name="+", through="Manage")
+
+    class Meta:
+        # unique_together = ('lastName', 'firstName')
+        ordering = ['lastName', 'firstName']
+
+    def __str__(self):
+        return self.lastName + ' ' + self.firstName + ' (' + self.nation + ')'
+
+
 class Rider(models.Model):
-    firstName = models.CharField(max_length=100)
-    lastName = models.CharField(max_length=100)
-    birthDate = models.DateTimeField(null=False)
-    birthPlace = models.CharField(max_length=100)
-    country = models.ForeignKey('Country', default=1, on_delete=models.CASCADE)
+    firstName = models.CharField(max_length=100, null=True)
+    lastName = models.CharField(max_length=100, null=True)
+    birthDate = models.DateTimeField(null=True)
+    birthPlace = models.CharField(max_length=100, null=True)
+    nation = models.ForeignKey("Country", on_delete=models.CASCADE, default=1)
+    continent = models.CharField(max_length=50, null=True)
     weigth = models.FloatField(null=True)
     height = models.FloatField(null=True)
+    uciid = models.CharField(max_length=11, null=True)
     uciRank = models.IntegerField(null=True)
     pcsRank = models.IntegerField(null=True)
     team = models.ManyToManyField(Team, related_name="+", through="Lineup")
@@ -78,12 +117,17 @@ class Rider(models.Model):
                                        through="StartList")
     race = models.ManyToManyField(Race, related_name="+", through="Register")
 
+    class Meta:
+        unique_together = ('lastName', 'firstName', 'uciid')
+        ordering = ['lastName', 'firstName']
+
     def __str__(self):
-        return self.firstName + ' ' + self.lastName.upper()
+        return self.lastName + ' ' + self.firstName + ' (' + self.nation + ')'
 
 
 class Lineup(models.Model):
     arrivalDate = models.DateTimeField(null=False,
+                                       default=timezone.now,
                                        verbose_name="Rider arrives in team")
     leavingDate = models.DateTimeField(blank=True,
                                        null=True,
@@ -91,16 +135,40 @@ class Lineup(models.Model):
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     rider = models.ForeignKey(Rider, on_delete=models.CASCADE)
 
+    class Meta:
+        ordering = ['rider']
+
     def __str__(self):
         return self.rider.lastName + ' in ' + self.team.name
 
 
+class Manage(models.Model):
+    startDate = models.DateTimeField(null=False,
+                                     default=timezone.now,
+                                     verbose_name="Manager arrives in team")
+    leavingDate = models.DateTimeField(blank=True,
+                                       null=True,
+                                       verbose_name="Manager leaves the team")
+    team = models.ForeignKey(Team, on_delete=models.CASCADE)
+    staff = models.ForeignKey(Staff, on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ['staff']
+
+    def __str__(self):
+        return self.staff.lastName + ' ' + self.staff.firstName + ' is ' + self.staff.function + ' of ' + self.team.name
+
+
 class Country(models.Model):
-    name = models.CharField(max_length=100)
-    code = models.CharField(max_length=10)
+    name = models.CharField(max_length=100, null=False)
+    alpha2Code = models.CharField(max_length=2, null=False)
+    alpha3Code = models.CharField(max_length=3, null=False)
+    numericCode = models.IntegerField()
 
     class Meta:
         verbose_name_plural = "Countries"
+        ordering = ('alpha3Code',)
+        unique_together = ('alpha3Code',)
 
     def __str__(self):
         return self.name

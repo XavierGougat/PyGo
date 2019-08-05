@@ -13,11 +13,11 @@ for line in f:
         rider.lastName = line[1]
         rider.firstName = line[2]
         rider.birthDate = datetime.datetime.strptime(line[3], "%d/%m/%Y").date()
-        nation = models.Country()
-        nation = get_object_or_404(models.Country, alpha3Code=line[6])
-        rider.save()
+        try:
+            nation = models.Country.objects.get(alpha3Code=line[6])
+        except models.Country.DoesNotExist:
+            nation = None
         rider.nation = nation
-        rider.continent = line[7]
         team = models.Team()
         team = get_object_or_404(models.Team, abreviation=line[8])
         rider.save()
@@ -29,11 +29,11 @@ for line in f:
         staff.function = line[0]
         staff.lastName = line[1]
         staff.firstName = line[2]
-        nation = models.Country()
-        nation = get_object_or_404(models.Country, alpha3Code=line[6])
-        staff.save()
+        try:
+            nation = models.Country.objects.get(alpha3Code=line[6])
+        except models.Country.DoesNotExist:
+            nation = None
         staff.nation = nation
-        staff.continent = line[7]
         team = models.Team()
         team = get_object_or_404(models.Team, abreviation=line[8])
         staff.save()

@@ -84,7 +84,7 @@ class Staff(models.Model):
     firstName = models.CharField(max_length=100, null=True)
     lastName = models.CharField(max_length=100, null=True)
     birthDate = models.DateTimeField(null=True)
-    nation = models.ForeignKey("Country", on_delete=models.CASCADE, default=1)
+    nation = models.ForeignKey("Country", on_delete=models.CASCADE, null=True, default=1)
     continent = models.CharField(max_length=50, null=True)
     uciid = models.CharField(max_length=11, null=True)
     function = models.CharField(max_length=50)
@@ -103,8 +103,7 @@ class Rider(models.Model):
     lastName = models.CharField(max_length=100, null=True)
     birthDate = models.DateTimeField(null=True)
     birthPlace = models.CharField(max_length=100, null=True)
-    nation = models.ForeignKey("Country", on_delete=models.CASCADE, default=1)
-    continent = models.CharField(max_length=50, null=True)
+    nation = models.ForeignKey("Country", on_delete=models.CASCADE, null=True, default=1)
     weigth = models.FloatField(null=True)
     height = models.FloatField(null=True)
     uciid = models.CharField(max_length=11, null=True)
@@ -156,7 +155,8 @@ class Manage(models.Model):
         ordering = ['staff']
 
     def __str__(self):
-        return self.staff.lastName + ' ' + self.staff.firstName + ' is ' + self.staff.function + ' of ' + self.team.name
+        return (self.staff.lastName + ' ' + self.staff.firstName + ' is ' +
+                self.staff.function + ' of ' + self.team.name)
 
 
 class Country(models.Model):

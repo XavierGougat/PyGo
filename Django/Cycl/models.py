@@ -95,7 +95,7 @@ class Staff(models.Model):
         ordering = ['lastName', 'firstName']
 
     def __str__(self):
-        return self.lastName + ' ' + self.firstName + ' (' + self.nation + ')'
+        return self.lastName + ' ' + self.firstName + ' (' + self.nation.name + ')'
 
 
 class Rider(models.Model):
@@ -121,7 +121,7 @@ class Rider(models.Model):
         ordering = ['lastName', 'firstName']
 
     def __str__(self):
-        return self.lastName + ' ' + self.firstName + ' (' + self.nation + ')'
+        return self.lastName + ' ' + self.firstName + ' (' + self.nation.name + ')'
 
 
 class Lineup(models.Model):

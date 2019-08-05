@@ -6,8 +6,8 @@ from .models import (Race, Stage, Serie, Parcours, Team, Rider, Lineup,
 
 class RiderAdmin(admin.ModelAdmin):
     list_display = ('lastName', 'firstName', 'nation', 'uciid')
-    search_fields = ['lastName', 'firstName', 'nation', 'uciid']
-    list_filter = ('lastName', 'firstName', 'nation', 'uciid')
+    search_fields = ['lastName', 'firstName', 'nation__name', 'uciid']
+    list_filter = ('nation',)
 
 
 class CountryAdmin(admin.ModelAdmin):

@@ -3,8 +3,10 @@ import csv
 import time
 import random
 import codecs
-
-from .models import Rider
+import os
+import os
+import django
+from Cycl import models
 
 # selenium package
 from selenium import webdriver
@@ -22,14 +24,14 @@ def pause():
 
 
 # options
-# path_to_webdriver = "/Applications/chromedriver"
-path_to_webdriver = "C:\\Users\\xgougat\\Desktop\\chromedriver"
+path_to_webdriver = "/Applications/chromedriver"
+# path_to_webdriver = "C:\\Users\\xgougat\\Desktop\\chromedriver"
 options = webdriver.ChromeOptions()
 options.add_argument("--kiosk")
 capa = DesiredCapabilities.CHROME
 capa["pageLoadStrategy"] = "none"
-# driver = webdriver.Chrome("/Applications/chromedriver", desired_capabilities=capa, chrome_options=options)
-driver = webdriver.Chrome("C:\\Users\\xgougat\\Desktop\\chromedriver", desired_capabilities=capa, chrome_options=options)
+driver = webdriver.Chrome("/Applications/chromedriver", desired_capabilities=capa, chrome_options=options)
+# driver = webdriver.Chrome("C:\\Users\\xgougat\\Desktop\\chromedriver", desired_capabilities=capa, chrome_options=options)
 wait = WebDriverWait(driver, 30)
 pause()
 
@@ -76,13 +78,12 @@ with codecs.open('pologne_startlist.csv', 'w', encoding="utf-8") as csvfile:
                 pass
 
             try:
-                riderInsert = Rider.objects.get(firstName__in=rider,
-                                                lastName__in=rider)
-            except Rider.DoesNotExist:
-                riderInsert = None
+                riderInsert = models.Rider.objects.get(firstName__in=rider)
+            except models.Rider.DoesNotExist:
+                riderInsert = models.Rider.objects.get(firstName="Thibaut")
             # write csv
             # writer.writerow({'rider': rider})
-            print("-- SUCCESS : %s" % (riderInsert.fullName))
+            print("-- SUCCESS : %s" % (riderInsert.lastName))
 # fin
 print("Scrap  terminé.")
 driver.close()

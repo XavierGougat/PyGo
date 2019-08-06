@@ -84,7 +84,8 @@ class Staff(models.Model):
     firstName = models.CharField(max_length=100, null=True)
     lastName = models.CharField(max_length=100, null=True)
     birthDate = models.DateTimeField(null=True)
-    nation = models.ForeignKey("Country", on_delete=models.CASCADE, null=True, default=1)
+    nation = models.ForeignKey("Country", on_delete=models.CASCADE, null=True,
+                               default=1)
     continent = models.CharField(max_length=50, null=True)
     uciid = models.CharField(max_length=11, null=True)
     function = models.CharField(max_length=50)
@@ -95,7 +96,8 @@ class Staff(models.Model):
         ordering = ['lastName', 'firstName']
 
     def __str__(self):
-        return self.lastName + ' ' + self.firstName + ' (' + self.nation.name + ')'
+        return (self.lastName + ' ' + self.firstName + ' (' +
+                self.nation.name + ')')
 
 
 class Rider(models.Model):
@@ -103,7 +105,8 @@ class Rider(models.Model):
     lastName = models.CharField(max_length=100, null=True)
     birthDate = models.DateTimeField(null=True)
     birthPlace = models.CharField(max_length=100, null=True)
-    nation = models.ForeignKey("Country", on_delete=models.CASCADE, null=True, default=1)
+    nation = models.ForeignKey("Country", on_delete=models.CASCADE, null=True,
+                               default=1)
     weigth = models.FloatField(null=True)
     height = models.FloatField(null=True)
     uciid = models.CharField(max_length=11, null=True)
@@ -121,7 +124,8 @@ class Rider(models.Model):
         ordering = ['lastName', 'firstName']
 
     def __str__(self):
-        return self.lastName + ' ' + self.firstName + ' (' + self.nation.name + ')'
+        return (self.lastName + ' ' + self.firstName + ' (' +
+                self.nation.name + ')')
 
 
 class Lineup(models.Model):

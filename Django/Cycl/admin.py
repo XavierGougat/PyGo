@@ -10,6 +10,19 @@ class RiderAdmin(admin.ModelAdmin):
     list_filter = ('nation',)
 
 
+class RiderAdmin(admin.ModelAdmin):
+    list_display = ('lastName', 'firstName', 'nation', 'uciid')
+    search_fields = ['lastName', 'firstName', 'nation__name', 'uciid']
+    list_filter = ('nation',)
+
+
+class StaffAdmin(admin.ModelAdmin):
+    list_display = ('lastName', 'firstName', 'nation', 'function', 'uciid')
+    search_fields = ['lastName', 'firstName', 'nation__name', 'function',
+                     'uciid']
+    list_filter = ('function', 'nation',)
+
+
 class CountryAdmin(admin.ModelAdmin):
     list_display = ('name', 'alpha2Code', 'alpha3Code')
     search_fields = ['name', 'alpha2Code', 'alpha3Code']
@@ -36,5 +49,5 @@ admin.site.register(Player)
 admin.site.register(Roster)
 admin.site.register(Ranking)
 admin.site.register(Teamcategory)
-admin.site.register(Staff)
+admin.site.register(Staff, StaffAdmin)
 admin.site.register(Manage)

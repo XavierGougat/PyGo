@@ -1,0 +1,13 @@
+<h1>Riders</h1>
+<h2>Nations disponibles</h3>
+<ul>
+{% for nation in nations %}
+    <li><a href="{% url "nation_riders" nation.name %}">{{ nation.name }}</a></li>
+{% endfor %}
+</ul>
+{% for rider in riders %}
+    <div class="rider">
+       <h3>{{ rider.lastName }}</h3>
+       <p>{{ rider.nation }}</p>
+    </div>
+{% endfor %}
